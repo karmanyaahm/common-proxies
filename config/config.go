@@ -34,6 +34,7 @@ type Configuration struct {
 	Rewrite struct {
 		FCM    rewrite.FCM
 		Gotify rewrite.Gotify
+		Lomiri rewrite.Lomiri
 	}
 }
 
@@ -80,5 +81,6 @@ func ParseConf(location string) error {
 func defaults(c *Configuration) (failed bool) {
 	return c.Rewrite.Gotify.Defaults() ||
 		c.Rewrite.FCM.Defaults() ||
+		c.Rewrite.Lomiri.Defaults() ||
 		c.Gateway.Matrix.Defaults()
 }

@@ -32,6 +32,7 @@ func main() {
 	handlers = []Handler{
 		&Config.Rewrite.Gotify,
 		&Config.Rewrite.FCM,
+		&Config.Rewrite.Lomiri,
 		&Config.Gateway.Matrix,
 	}
 
