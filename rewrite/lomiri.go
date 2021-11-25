@@ -3,6 +3,7 @@ package rewrite
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/karmanyaahm/up_rewrite/utils"
 )
@@ -22,7 +23,7 @@ func (l Lomiri) Path() string {
 type lomiriSend struct {
 	Token    string `json:"token"`
 	AppId    string `json:"appid"`
-	ExpireOn string `json:"expire_on,omitempty"`
+	ExpireOn string `json:"expire_on"`
 	Data     string `json:"data"`
 	// clear all pending messages for appid
 	ClearPending bool `json:"clear_pending,omitempty"`
@@ -35,9 +36,10 @@ func (l Lomiri) Req(body []byte, req http.Request) (*http.Request, error) {
 	appid := req.URL.Query().Get("appid")
 
 	newBody, err := utils.EncodeJSON(lomiriSend{
-		Token: token,
-		AppId: appid,
-		Data:  string(body),
+		Token:    token,
+		AppId:    appid,
+		ExpireOn: time.Now().Add(7 * 24 * time.Hour).Format(time.RFC3339),
+		Data:     string(body),
 	})
 
 	if err != nil {
