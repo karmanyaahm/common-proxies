@@ -116,6 +116,21 @@ func (s *RewriteTests) TestFCMKeys() {
 	}
 }
 
+func (s *RewriteTests) TestLomiri() {
+	lomiri := rewrite.Lomiri{APIURL: s.ts.URL}
+
+	request := httptest.NewRequest("POST", "/lomiri?token=ABC&appid=org.abc.def", bytes.NewBufferString("content"))
+	handle(&lomiri)(s.Resp, request)
+
+	//resp
+	s.Equal(202, s.Resp.Result().StatusCode, "request should return a valid response")
+
+	s.Require().NotNil(s.Call, "No request made")
+	//call
+	s.Equal("application/json", s.Call.Header.Get("Content-Type"), "header not set")
+	s.Equal(`{"token":"ABC","appid":"org.abc.def","data":"content"}`+"\n", string(s.CallBody), "request body incorrect")
+}
+
 func (s *RewriteTests) TestGotify() {
 	testurl, _ := url.Parse(s.ts.URL)
 	gotify := rewrite.Gotify{Address: testurl.Host, Scheme: testurl.Scheme}
