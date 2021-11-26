@@ -129,7 +129,7 @@ func (s *RewriteTests) TestLomiri() {
 	s.Require().NotNil(s.Call, "No request made")
 	//call
 	s.Equal("application/json", s.Call.Header.Get("Content-Type"), "header not set")
-	s.Regexp(regexp.MustCompile(`\{"token":"ABC","appid":"org.abc.def","expire_on":".{25}","data":"content"\}`+"\n"), string(s.CallBody), "request body incorrect")
+	s.Regexp(regexp.MustCompile(`{"token":"ABC","appid":"org.abc.def","expire_on":"(.{20}|.{25})","data":"content"}`+"\n"), string(s.CallBody), "request body incorrect")
 	// yes this is ignoring the time string for now
 }
 
