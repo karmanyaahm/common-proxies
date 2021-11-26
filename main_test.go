@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"net/url"
+	"regexp"
 	"testing"
 
 	"github.com/karmanyaahm/up_rewrite/config"
@@ -128,7 +129,8 @@ func (s *RewriteTests) TestLomiri() {
 	s.Require().NotNil(s.Call, "No request made")
 	//call
 	s.Equal("application/json", s.Call.Header.Get("Content-Type"), "header not set")
-	s.Equal(`{"token":"ABC","appid":"org.abc.def","data":"content"}`+"\n", string(s.CallBody), "request body incorrect")
+	s.Regexp(regexp.MustCompile(`\{"token":"ABC","appid":"org.abc.def","expire_on":".{25}","data":"content"\}`+"\n"), string(s.CallBody), "request body incorrect")
+	// yes this is ignoring the time string for now
 }
 
 func (s *RewriteTests) TestGotify() {
