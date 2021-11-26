@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"io"
-	"io/ioutil"
 	"net/http"
 	"time"
 
@@ -66,7 +65,7 @@ func actuallyDecideIfAllowed(url string, c *http.Client) bool {
 
 	//NOTE 1000 ought to be enough?
 	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(io.LimitReader(resp.Body, 1000))
+	body, err := io.ReadAll(io.LimitReader(resp.Body, 1000))
 	if err != nil {
 		return false
 	}

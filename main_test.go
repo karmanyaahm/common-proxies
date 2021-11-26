@@ -2,7 +2,7 @@ package main
 
 import (
 	"bytes"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/http/httptest"
 	"net/url"
@@ -34,7 +34,7 @@ type RewriteTests struct {
 func (s *RewriteTests) SetupTest() {
 	s.ts = httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		s.Call = r
-		s.CallBody, _ = ioutil.ReadAll(r.Body)
+		s.CallBody, _ = io.ReadAll(r.Body)
 		w.WriteHeader(200)
 	}))
 
@@ -159,7 +159,7 @@ func (s *RewriteTests) TestMatrixSend() {
 
 	//resp
 	s.Equal(200, s.Resp.Result().StatusCode, "request should be valid")
-	body, _ := ioutil.ReadAll(s.Resp.Body)
+	body, _ := io.ReadAll(s.Resp.Body)
 	s.Equal(string(body), `{"rejected":[]}`)
 
 	s.Require().NotNil(s.Call, "No request made")

@@ -3,7 +3,6 @@ package main
 import (
 	"errors"
 	"io"
-	"io/ioutil"
 	"log"
 	"net/http"
 	"strconv"
@@ -56,7 +55,7 @@ func gatewayHandler(h Gateway) HttpHandler {
 		case http.MethodGet:
 			w.Write(h.Get())
 		case http.MethodPost:
-			body, err := ioutil.ReadAll(io.LimitReader(r.Body, 4005))
+			body, err := io.ReadAll(io.LimitReader(r.Body, 4005))
 			r.Body.Close()
 			nread = len(body)
 
@@ -124,7 +123,7 @@ func proxyHandler(h Proxy) HttpHandler {
 			versionWrite(w)
 		case http.MethodPost:
 			//4000 max so little extra
-			body, err := ioutil.ReadAll(io.LimitReader(r.Body, 4005))
+			body, err := io.ReadAll(io.LimitReader(r.Body, 4005))
 			r.Body.Close()
 
 			nread = len(body)
@@ -147,7 +146,7 @@ func proxyHandler(h Proxy) HttpHandler {
 			}
 
 			//read upto 4000 to be able to reuse conn then close
-			ioutil.ReadAll(io.LimitReader(r.Body, 4000))
+			io.ReadAll(io.LimitReader(r.Body, 4000))
 			resp.Body.Close()
 
 			code = h.RespCode(resp)
